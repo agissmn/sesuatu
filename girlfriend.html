@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anti Nicetry</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <audio id="backgroundSound" src="lagu.mp3" preload="auto"></audio>
+
+    <div class="gallery-container">
+      <h1>Makasih Yaaa &lt;3</h1>
+      <div class="gallery">
+        <canvas id="heartCanvas"></canvas>
+        <div class="gallery-item rotate">
+          <img
+            src="https://media.tenor.com/K0Op-0SpsvkAAAAj/dudu-cute.gif"
+            alt="Kenangan 1"
+          />
+          <div class="caption">"Makasih ya cantik."</div>
+        </div>
+        <div class="gallery-item">
+          <img
+            src="https://media.tenor.com/CNJSyzMIkskAAAAj/bubu-dudu-sseeyall.gif"
+            alt="Kenangan 2"
+          />
+          <div class="caption">
+            "Aku akan selalu mencintaimu, sampai kapanpun."
+          </div>
+        </div>
+        <div class="gallery-item rotate">
+          <img
+            src="https://media.tenor.com/63IENW605s0AAAAj/dudu-twisting-dance.gif"
+            alt="Kenangan 3"
+          />
+          <div class="caption">"Makasih Udah Nerima Aku Yaa"</div>
+        </div>
+        <div class="gallery-item">
+          <img
+            src="https://media.tenor.com/LFYspX1SSUcAAAAj/bubu-dudu-bubu.gif"
+            alt="Kenangan 4"
+          />
+          <div class="caption">"I LOVE YOU SAYANGKUUUU"</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const nama = prompt("Haloo, siapa nama kamu?");
+      while (true) {
+        let terima = confirm(`Hehe, Halo ${nama}, Kamu mau gak jadi Pacarku?`);
+        if (terima) {
+          break;
+        }
+      }
+
+      // Pindahkan alert dan play sound ke dalam fungsi
+      function showAlertAndPlaySound() {
+        alert(`Hehe Oke ${nama}, Makasih udah kasih aku kesempatan ini yaaa<3`);
+        const sound = document.getElementById("backgroundSound");
+        sound.play();
+      }
+
+      // Memanggil fungsi setelah konfirmasi
+      showAlertAndPlaySound();
+
+      const canvas = document.getElementById("heartCanvas");
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+
+      let heartsArray = [];
+
+      class Heart {
+        constructor(x, y, size, speed) {
+          this.x = x;
+          this.y = y;
+          this.size = size;
+          this.speed = speed;
+          this.alpha = 1; // Mulai dengan alpha penuh
+        }
+
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.alpha;
+          ctx.fillStyle = "#ff6b6b";
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y);
+          ctx.bezierCurveTo(
+            this.x + this.size / 2,
+            this.y - this.size / 2,
+            this.x + this.size,
+            this.y + this.size / 3,
+            this.x,
+            this.y + this.size
+          );
+          ctx.bezierCurveTo(
+            this.x - this.size,
+            this.y + this.size / 3,
+            this.x - this.size / 2,
+            this.y - this.size / 2,
+            this.x,
+            this.y
+          );
+          ctx.fill();
+          ctx.restore();
+        }
+
+        update() {
+          this.y -= this.speed; // Gerakan ke atas
+          this.alpha -= 0.01; // Mengurangi transparansi saat bergerak
+          if (this.alpha <= 0) {
+            this.alpha = 1; // Reset alpha saat hati hilang
+            this.y = canvas.height; // Reset posisi ke bawah
+            this.x = Math.random() * canvas.width; // Reset posisi x acak
+          }
+          this.draw();
+        }
+      }
+
+      function createHeart() {
+        const x = Math.random() * canvas.width;
+        const size = Math.random() * 20 + 10;
+        const speed = Math.random() * 1.5 + 0.5;
+        heartsArray.push(new Heart(x, canvas.height, size, speed)); // Memulai dari bawah
+      }
+
+      // Tambahkan hati baru setiap 100 ms
+      setInterval(createHeart, 100);
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        heartsArray.forEach((heart) => heart.update());
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+</html>
